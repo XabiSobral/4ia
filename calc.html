@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Calculator</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#0a0a0a;
+color:white;
+}
+
+.container{
+width:420px;
+padding:30px;
+border-radius:15px;
+background:#111;
+box-shadow:0 0 25px #00ffff33;
+}
+
+h1{
+text-align:center;
+margin-bottom:25px;
+color:#00ffff;
+text-shadow:0 0 10px #00ffff;
+}
+
+.menu{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+}
+
+.menu button{
+flex:1;
+padding:10px;
+background:#111;
+border:2px solid #00ffff;
+border-radius:8px;
+color:#00ffff;
+cursor:pointer;
+transition:0.3s;
+}
+
+.menu button:hover{
+background:#00ffff;
+color:black;
+box-shadow:0 0 15px #00ffff;
+}
+
+.section{
+display:none;
+}
+
+.section.active{
+display:block;
+}
+
+input, select{
+width:100%;
+padding:10px;
+margin:8px 0;
+border-radius:6px;
+border:1px solid #333;
+background:#0a0a0a;
+color:#00ffff;
+}
+
+.calculate{
+width:100%;
+padding:10px;
+margin-top:10px;
+border:none;
+border-radius:8px;
+background:#ff00ff;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+box-shadow:0 0 10px #ff00ff;
+}
+
+.calculate:hover{
+box-shadow:0 0 20px #ff00ff;
+}
+
+.result{
+margin-top:15px;
+padding:12px;
+background:#0a0a0a;
+border-radius:6px;
+border:1px solid #00ffff;
+text-align:center;
+color:#00ffff;
+box-shadow:0 0 10px #00ffff;
+font-weight:bold;
+}
+
+h3{
+margin-top:10px;
+color:#ff00ff;
+text-shadow:0 0 8px #ff00ff;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Calculator</h1>
+
+<div class="menu">
+<button onclick="showSection('temp')">Temperature</button>
+<button onclick="showSection('bmi')">BMI</button>
+<button onclick="showSection('calorie')">Calories</button>
+</div>
+
+<div id="temp" class="section active">
+
+<h3>Temperature Converter</h3>
+
+<input type="number" id="tempValue" placeholder="Enter temperature">
+
+<select id="tempScale">
+<option value="C">Celsius</option>
+<option value="F">Fahrenheit</option>
+<option value="K">Kelvin</option>
+</select>
+
+<button class="calculate" onclick="convertTemp()">Convert</button>
+
+<div class="result" id="tempResult"></div>
+
+</div>
+
+<div id="bmi" class="section">
+
+<h3>BMI Calculator</h3>
+
+<input type="number" id="weight" placeholder="Weight (kg)">
+<input type="number" id="height" placeholder="Height (cm)">
+
+<button class="calculate" onclick="calculateBMI()">Calculate BMI</button>
+
+<div class="result" id="bmiResult"></div>
+
+</div>
+
+<div id="calorie" class="section">
+
+<h3>Calorie Estimator</h3>
+
+<select id="food">
+<option value="52">Apple</option>
+<option value="130">Rice</option>
+<option value="239">Chicken</option>
+<option value="265">Bread</option>
+</select>
+
+<input type="number" id="grams" placeholder="Quantity (grams)">
+
+<button class="calculate" onclick="calculateCalories()">Estimate Calories</button>
+
+<div class="result" id="calorieResult"></div>
+
+</div>
+
+</div>
+
+<script>
+
+function showSection(id){
+document.querySelectorAll(".section").forEach(sec=>{
+sec.classList.remove("active")
+})
+document.getElementById(id).classList.add("active")
+}
+
+function convertTemp(){
+
+let value=parseFloat(document.getElementById("tempValue").value)
+let scale=document.getElementById("tempScale").value
+let result=""
+
+if(scale==="C"){
+let f=(value*9/5)+32
+let k=value+273.15
+result=`${f.toFixed(2)} °F | ${k.toFixed(2)} K`
+}
+
+if(scale==="F"){
+let c=(value-32)*5/9
+let k=c+273.15
+result=`${c.toFixed(2)} °C | ${k.toFixed(2)} K`
+}
+
+if(scale==="K"){
+let c=value-273.15
+let f=(c*9/5)+32
+result=`${c.toFixed(2)} °C | ${f.toFixed(2)} °F`
+}
+
+document.getElementById("tempResult").innerText=result
+
+}
+
+function calculateBMI(){
+
+let weight=document.getElementById("weight").value
+let height=document.getElementById("height").value/100
+
+let bmi=weight/(height*height)
+
+let category=""
+
+if(bmi<18.5) category="Underweight"
+else if(bmi<25) category="Normal"
+else if(bmi<30) category="Overweight"
+else category="Obesity"
+
+document.getElementById("bmiResult").innerText=
+`BMI: ${bmi.toFixed(2)} (${category})`
+
+}
+
+function calculateCalories(){
+
+let calories=document.getElementById("food").value
+let grams=document.getElementById("grams").value
+
+let total=(grams/100)*calories
+
+document.getElementById("calorieResult").innerText=
+`Approximate calories: ${total.toFixed(2)} kcal`
+
+}
+
+</script>
+
+</body>
+</html>
