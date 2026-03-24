@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Neón - Todos con Audio</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #050505;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+        }
+
+        .calculator {
+            background: #111;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px #0ff, inset 0 0 20px rgba(0, 255, 255, 0.2);
+            border: 2px solid #0ff;
+            width: 320px;
+        }
+
+        #display {
+            width: 100%;
+            height: 60px;
+            background: #000;
+            border: none;
+            color: #0ff;
+            font-size: 2rem;
+            text-align: right;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: inset 0 0 10px #0ff;
+            text-shadow: 0 0 5px #0ff;
+            outline: none;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #222;
+            color: #fff;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background: #333;
+            box-shadow: 0 0 10px #fff;
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* === TODOS LOS BOTONES NUMÉRICOS CON NEÓN === */
+        #btn-0 { border: 1px solid #fff; box-shadow: 0 0 5px #fff; }
+        #btn-0:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
+        #btn-0.playing { animation: pulse 0.3s; }
+
+        #btn-1 { border: 1px solid #ff0; box-shadow: 0 0 5px #ff0; }
+        #btn-1:hover { background: #ff0; color: #000; box-shadow: 0 0 20px #ff0; }
+        #btn-1.playing { animation: pulse 0.3s; }
+
+        #btn-2 { border: 1px solid #0f0; box-shadow: 0 0 5px #0f0; }
+        #btn-2:hover { background: #0f0; color: #000; box-shadow: 0 0 20px #0f0; }
+        #btn-2.playing { animation: pulse 0.3s; }
+
+        #btn-3 { border: 1px solid #0ff; box-shadow: 0 0 5px #0ff; }
+        #btn-3:hover { background: #0ff; color: #000; box-shadow: 0 0 20px #0ff; }
+        #btn-3.playing { animation: pulse 0.3s; }
+
+        #btn-4 { border: 1px solid #f0f; box-shadow: 0 0 5px #f0f; }
+        #btn-4:hover { background: #f0f; color: #000; box-shadow: 0 0 20px #f0f; }
+        #btn-4.playing { animation: pulse 0.3s; }
+
+        #btn-5 { border: 1px solid #f0a; box-shadow: 0 0 5px #f0a; }
+        #btn-5:hover { background: #f0a; color: #000; box-shadow: 0 0 20px #f0a; }
+        #btn-5.playing { animation: pulse 0.3s; }
+
+        #btn-6 { border: 1px solid #fa0; box-shadow: 0 0 5px #fa0; }
+        #btn-6:hover { background: #fa0; color: #000; box-shadow: 0 0 20px #fa0; }
+        #btn-6.playing { animation: pulse 0.3s; }
+
+        #btn-7 { border: 1px solid #8af; box-shadow: 0 0 5px #8af; }
+        #btn-7:hover { background: #8af; color: #000; box-shadow: 0 0 20px #8af; }
+        #btn-7.playing { animation: pulse 0.3s; }
+
+        #btn-8 { border: 1px solid #f88; box-shadow: 0 0 5px #f88; }
+        #btn-8:hover { background: #f88; color: #000; box-shadow: 0 0 20px #f88; }
+        #btn-8.playing { animation: pulse 0.3s; }
+
+        #btn-9 { border: 1px solid #8f8; box-shadow: 0 0 5px #8f8; }
+        #btn-9:hover { background: #8f8; color: #000; box-shadow: 0 0 20px #8f8; }
+        #btn-9.playing { animation: pulse 0.3s; }
+
+        @keyframes pulse {
+            50% { transform: scale(1.1); }
+        }
+
+        .operator {
+            color: #f0f;
+            border: 1px solid #f0f;
+            box-shadow: 0 0 5px #f0f;
+        }
+        .operator:hover {
+            background: #f0f;
+            color: #000;
+            box-shadow: 0 0 20px #f0f;
+        }
+
+        .equal {
+            grid-column: span 2;
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 10px #0f0;
+            font-weight: bold;
+        }
+
+        .clear {
+            color: #f00;
+            border: 1px solid #f00;
+            box-shadow: 0 0 5px #f00;
+        }
+        .clear:hover {
+            background: #f00;
+            color: #fff;
+            box-shadow: 0 0 20px #f00;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <input type="text" id="display" readonly>
+        
+        <!-- === 10 AUDIOS PARA TODOS LOS NÚMEROS 0-9 === -->
+        <!-- ✅ ACTUALIZADO: Audio para el botón 0 -->
+        <audio id="audio0" preload="auto">
+            <source src="https://archive.org/download/audio-2026-03-18-10-35-24/AUDIO-2026-03-18-10-36-21.m4a">
+        </audio>
+        <audio id="audio1" preload="auto">
+            <source src="https://archive.org/download/audio-2026-03-18-10-35-24/AUDIO-2026-03-18-10-35-12.m4a">
+        </audio>
+        <audio id="audio2" preload="auto">
+            <source src="https://archive.org/download/audio-2026-03-18-10-35-24/AUDIO-2026-03-18-10-35-24.m4a">
+        </audio>
+        <audio id="audio3" preload="auto">
+            <source src="https://archive.org/download/audio-2026-03-18-10-35-24/AUDIO-2026-03-18-10-35-31.m4a">
+        </audio>
+        <audio id="audio4" preload="auto">
+            <source src="https://archive.org/download/audio-2026-03-18-10-35-24/AUDIO-2026-03-18-10-35-39.m4a">
+        </audio>
+        <audio id="audio5" preload="auto">
+            <source src="https://archive.org/download/audio-2026-03-18-10-35-24/AUDIO-2026-03-18-10-35-48.m4a">
+        </audio>
+        <audio id="audio6" preload="auto">
+            <source src="https://archive.org/download/audio-2026-03-18-10-35-24/AUDIO-2026-03-18-10-35-55.m4a">
+        </audio>
+        <audio id="audio7" preload="auto">
+            <source src="https://archive.org/download/audio-2026-03-18-10-35-24/AUDIO-2026-03-18-10-36-01.m4a">
+        </audio>
+        <audio id="audio8" preload="auto">
+            <source src="https://archive.org/download/audio-2026-03-18-10-35-24/AUDIO-2026-03-18-10-36-08.m4a">
+        </audio>
+        <audio id="audio9" preload="auto">
+            <source src="https://archive.org/download/audio-2026-03-18-10-35-24/AUDIO-2026-03-18-10-36-14.m4a">
+        </audio>
+
+        <div class="buttons">
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button class="operator" onclick="appendToDisplay('/')">/</button>
+            <button class="operator" onclick="appendToDisplay('*')">×</button>
+            <button class="operator" onclick="deleteLast()">⌫</button>
+
+            <button id="btn-7" onclick="pressWithAudio('7', 'audio7', 'btn-7')">7</button>
+            <button id="btn-8" onclick="pressWithAudio('8', 'audio8', 'btn-8')">8</button>
+            <button id="btn-9" onclick="pressWithAudio('9', 'audio9', 'btn-9')">9</button>
+            <button class="operator" onclick="appendToDisplay('-')">-</button>
+
+            <button id="btn-4" onclick="pressWithAudio('4', 'audio4', 'btn-4')">4</button>
+            <button id="btn-5" onclick="pressWithAudio('5', 'audio5', 'btn-5')">5</button>
+            <button id="btn-6" onclick="pressWithAudio('6', 'audio6', 'btn-6')">6</button>
+            <button class="operator" onclick="appendToDisplay('+')">+</button>
+
+            <button id="btn-1" onclick="pressWithAudio('1', 'audio1', 'btn-1')">1</button>
+            <button id="btn-2" onclick="pressWithAudio('2', 'audio2', 'btn-2')">2</button>
+            <button id="btn-3" onclick="pressWithAudio('3', 'audio3', 'btn-3')">3</button>
+            <button onclick="appendToDisplay('.')">.</button>
+
+            <button id="btn-0" onclick="pressWithAudio('0', 'audio0', 'btn-0')">0</button>
+            <button onclick="appendToDisplay('00')">00</button>
+            <button class="equal" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+        let audioReady = false;
+
+        // Activar audio con primera interacción
+        document.addEventListener('click', () => {
+            audioReady = true;
+        }, { once: true });
+
+        function appendToDisplay(val) {
+            display.value += val;
+        }
+
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        function deleteLast() {
+            display.value = display.value.slice(0, -1);
+        }
+
+        // Función única para todos los botones con audio
+        function pressWithAudio(number, audioId, btnId) {
+            display.value += number;
+            
+            if (audioReady) {
+                const audio = document.getElementById(audioId);
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
+                
+                // Efecto visual
+                const btn = document.getElementById(btnId);
+                btn.classList.add('playing');
+                setTimeout(() => btn.classList.remove('playing'), 300);
+            }
+        }
+
+        function calculate() {
+            try {
+                if (display.value) {
+                    display.value = eval(display.value);
+                }
+            } catch {
+                display.value = 'Error';
+                setTimeout(() => {
+                    if (display.value === 'Error') display.value = '';
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>
